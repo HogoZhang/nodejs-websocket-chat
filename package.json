@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-websocket-chat",
+  "version": "1.0.0",
+  "description": "一个简易的聊天室",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HogoZhang/nodejs-websocket-chat.git"
+  },
+  "keywords": [
+    "nodejs-websocket"
+  ],
+  "author": "hogozhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HogoZhang/nodejs-websocket-chat/issues"
+  },
+  "homepage": "https://github.com/HogoZhang/nodejs-websocket-chat#readme",
+  "dependencies": {
+    "nodejs-websocket": "^1.7.1"
+  }
+}

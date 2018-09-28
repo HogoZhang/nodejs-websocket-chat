@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>nodejs-webscoket</title>
+</head>
+
+<body>
+  <input type="text" id="name">
+  <button id="setname">设置昵称</button>
+  <input type="text" id="text">
+  <button type="button" id="btn">发送消息</button>
+  <div id="container">
+
+  </div>
+  <script>
+    var ws = null;
+    //设置昵称
+    document.getElementById('setname').onclick = function () {
+      var name = document.getElementById('name').value;
+      if (name == '') return console.log('昵称为空');
+      //请求连接websocket服务
+      ws = new WebSocket('ws://localhost:2333');
+      //服务器响应了WebSocket 连接请求，open 事件触发并建立一个连接。open 事件对应的回调函数称作onopen
+      ws.onopen = function () {
+        //将昵称发送至后台
+        ws.send(JSON.stringify({
+          name: name, type: 'setname'
+        }));
+      }
+      
+      // 发送消息函数赋值给发送按钮
+      document.getElementById('btn').onclick = send;
+      // 消息输入框enter键监听
+      document.getElementById('text').onkeyup = function (e) {
+        if (e.keyCode !== 13) return;
+        send();
+      }
+
+      // message 事件在接收到消息时触发，对应于该事件的回调函数是onmessage
+      ws.onmessage = function (e) {
+        var con = document.getElementById('container');
+        //在container盒子子元素开头插入消息div
+        con.insertBefore(createChatPanel(JSON.parse(e.data)), con.children[0]);
+      }
+      //设置昵称后禁用设置按钮
+      document.getElementById('setname').setAttribute('disabled', true);
+    }
+    //封装消息div创建函数
+    function createChatPanel(data) {
+      var name = data.name;
+      var text = data.text;
+
+      var div = document.createElement('div');
+      var span1 = document.createElement('span');
+      var span2 = document.createElement('span');
+
+      span1.innerHTML = name + '' + (new Date()).toString();
+      span2.innerHTML = text;
+
+      span1.style.color = '#fb7299';
+      span2.style.fontWeight = '700';
+
+      div.appendChild(span1);
+      div.appendChild(document.createElement('br'));
+      div.appendChild(span2);
+
+      return div;
+
+    }
+    //封装消息发送函数
+    function send() {
+      var text = document.getElementById('text')
+      if (text.value == '') return;
+      ws.send(JSON.stringify({
+        text: text.value,
+        type: 'chat'
+      }));
+    }
+  </script>
+</body>
+
+</html>
